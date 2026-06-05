@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Readiness Self-Assessment | M&H Management and Consulting, LLC</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-page: #f0efe9;
+      --bg-card: #f7f7f5;
+      --bg-white: #ffffff;
+      --text-primary: #1a1a18;
+      --text-secondary: #5f5e5a;
+      --text-tertiary: #888780;
+      --border-light: rgba(0,0,0,0.10);
+      --border-medium: rgba(0,0,0,0.18);
+      --accent: #185FA5;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--bg-white);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .site-header img {
+      height: 64px;
+      width: auto;
+      flex-shrink: 0;
+    }
+    .header-text { flex: 1; min-width: 220px; }
+    .header-text h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a3a6b;
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+    .header-text p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      flex: 1;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* Intro card */
+    .intro {
+      background: var(--bg-white);
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .intro p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+    .scale-guide {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 16px;
+      border-top: 0.5px solid var(--border-light);
+      padding-top: 12px;
+    }
+    .scale-item { font-size: 13px; color: var(--text-secondary); }
+    .scale-item strong { color: var(--text-primary); font-weight: 500; }
+
+    /* Dimension cards */
+    .dimension {
+      background: var(--bg-white);
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .dim-header {
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border-bottom: 0.5px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .dim-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .dim-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 3px; line-height: 1.5; max-width: 480px; }
+    .dim-score-box { text-align: right; flex-shrink: 0; }
+    .dim-score-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+    .dim-score-val { font-size: 22px; font-weight: 600; color: var(--text-primary); }
+    .dim-score-max { font-size: 13px; color: var(--text-secondary); }
+
+    /* Questions */
+    .question {
+      padding: 0.875rem 1.25rem;
+      border-bottom: 0.5px solid var(--border-light);
+    }
+    .question:last-child { border-bottom: none; }
+    .q-text { font-size: 14px; color: var(--text-primary); line-height: 1.55; margin-bottom: 10px; }
+    .rating-btns { display: flex; gap: 8px; align-items: center; }
+    .rating-label { font-size: 12px; color: var(--text-tertiary); margin-right: 4px; }
+    .rating-btn {
+      width: 44px; height: 36px;
+      border: 0.5px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      font-size: 14px; font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+    }
+    .rating-btn:hover { background: var(--bg-card); color: var(--text-primary); }
+    .rating-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* Dimension footer */
+    .dim-footer {
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border-top: 0.5px solid var(--border-light);
+    }
+    .progress-bar { height: 4px; background: var(--border-light); border-radius: 2px; margin-bottom: 12px; }
+    .progress-fill { height: 4px; border-radius: 2px; background: var(--accent); transition: width 0.3s ease; }
+    .guidance-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 6px; }
+    .guidance-row { font-size: 13px; color: var(--text-secondary); margin-bottom: 3px; line-height: 1.5; }
+    .guidance-row strong { color: var(--text-primary); font-weight: 500; }
+
+    /* Summary */
+    .summary {
+      background: var(--bg-white);
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .summary-header {
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border-bottom: 0.5px solid var(--border-light);
+    }
+    .summary-header h2 { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 1.25rem; border-bottom: 0.5px solid var(--border-light); font-size: 14px;
+    }
+    .summary-row .label { color: var(--text-secondary); }
+    .summary-row .score { font-weight: 500; color: var(--text-primary); min-width: 60px; text-align: right; }
+    .total-row {
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border-top: 0.5px solid var(--border-medium);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .total-label { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .total-score { font-size: 28px; font-weight: 600; color: var(--text-primary); }
+
+    /* Interpretation */
+    .interpretation { padding: 1.25rem; border-top: 0.5px solid var(--border-light); }
+    .interp-badge {
+      display: inline-block; font-size: 12px; font-weight: 600;
+      padding: 4px 12px; border-radius: var(--radius-md); margin-bottom: 10px; letter-spacing: 0.02em;
+    }
+    .interp-text { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+    .interp-strong    { background: #EAF3DE; color: #3B6D11; }
+    .interp-developing{ background: #FAEEDA; color: #854F0B; }
+    .interp-early     { background: #FAECE7; color: #993C1D; }
+    .interp-foundation{ background: #FCEBEB; color: #A32D2D; }
+
+    /* Reset */
+    .reset-btn {
+      display: block; margin: 0 auto 2rem;
+      padding: 10px 28px;
+      border: 0.5px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      font-size: 14px; color: var(--text-secondary); cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+    .reset-btn:hover { background: var(--bg-card); color: var(--text-primary); }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: var(--bg-white);
+      border-top: 1px solid var(--border-light);
+      text-align: center;
+      padding: 1rem 2rem;
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+    .site-footer strong { color: var(--text-secondary); }
+
+    /* Print */
+    @media print {
+      body { background: white; }
+      .site-header { border-bottom: 1px solid #ccc; }
+      .reset-btn { display: none; }
+      .dimension, .summary { break-inside: avoid; }
+    }
+
+    @media (max-width: 540px) {
+      .site-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .scale-guide { grid-template-columns: 1fr; }
+      .dim-header { flex-direction: column; }
+      .dim-score-box { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="https://www.mhmgt.com" target="_blank" rel="noopener noreferrer" style="display:inline-flex;flex-shrink:0;" aria-label="Visit M&H Management and Consulting website"><img src="data:image/png;base64,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" alt="M&H Management and Consulting, LLC logo" /></a>
+  <div class="header-text">
+    <h1>AI Readiness Self-Assessment Tool</h1>
+    <p>How ready is your association for AI implementation?</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro">
+    <p>This self-assessment is designed to help association executives and senior leadership teams develop an honest picture of where their organization stands across five dimensions of AI readiness. It is not a pass-or-fail instrument — it is a structured conversation starter designed to surface specific strengths and gaps that should inform your sequencing decisions as you move from AI awareness to AI implementation.</p>
+    <p>The assessment is most valuable when completed collaboratively by the senior leadership team rather than by a single individual. Different leaders will have different perspectives on the same questions, and those differences are themselves useful data about where organizational alignment work is needed before implementation begins.</p>
+    <div class="scale-guide">
+      <div class="scale-item"><strong>1 – Not in place:</strong> Does not currently exist or apply to our organization.</div>
+      <div class="scale-item"><strong>2 – Early stage:</strong> We have begun thinking about this, but it is not yet functional.</div>
+      <div class="scale-item"><strong>3 – Developing:</strong> Partially in place but has meaningful gaps to be addressed.</div>
+      <div class="scale-item"><strong>4 – Well established:</strong> Functioning well and not a significant barrier to AI implementation.</div>
+    </div>
+  </div>
+
+  <div id="dimensions-container"></div>
+
+  <div class="summary">
+    <div class="summary-header"><h2>Overall assessment summary</h2></div>
+    <div id="summary-rows"></div>
+    <div class="total-row">
+      <span class="total-label">Total score</span>
+      <span class="total-score" id="total-score">0 / 120</span>
+    </div>
+    <div class="interpretation" id="overall-interp"></div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">Reset all responses</button>
+
+</main>
+
+<footer class="site-footer">
+  &copy; <span id="copy-year"></span> <strong><a href="https://www.mhmgt.com" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid currentColor;">M&amp;H Management and Consulting, LLC</a></strong>. All rights reserved.
+</footer>
+
+<script>
+document.getElementById('copy-year').textContent = new Date().getFullYear();
+
+const dimensions = [
+  {
+    id: 1, title: "Dimension 1: Data readiness", max: 24,
+    subtitle: "The foundational dimension — no other AI investment will reach its potential without a sufficient data foundation.",
+    questions: [
+      "Our member profiles in the AMS are substantially complete, with core fields populated consistently across the membership.",
+      "Our organization maintains consistent data entry standards that are understood and followed by all relevant staff.",
+      "Member data from different systems, such as the AMS, LMS, events platform, and marketing tools, can be connected and analyzed together in a meaningful way.",
+      "We have a designated owner of data quality within our organization, and that role carries real accountability for maintaining standards over time.",
+      "We know where our most significant data gaps are and have a plan to address them.",
+      "We retain sufficient historical member data, including engagement, renewal, and event history, to support predictive analysis."
+    ],
+    guidance: [
+      { range: "20–24", label: "Strong foundation", text: "Ready to support meaningful AI implementation." },
+      { range: "13–19", label: "Developing foundation", text: "Address priority gaps alongside early AI deployment." },
+      { range: "8–12",  label: "Significant gaps",    text: "Data remediation should precede or run parallel to technology investment." },
+      { range: "6–7",   label: "Foundation not yet in place", text: "Begin with a formal data audit before pursuing AI tools." }
+    ]
+  },
+  {
+    id: 2, title: "Dimension 2: Technology infrastructure readiness", max: 24,
+    subtitle: "Assesses whether existing systems can support AI integration without prohibitive barriers.",
+    questions: [
+      "Our core technology platforms, including AMS, LMS, and events tools, offer APIs or data export capabilities that allow them to connect with other systems.",
+      "We have a current and accurate map of the technology systems we operate and understand how data flows between them.",
+      "Our vendor relationships include flexibility to integrate third-party tools without prohibitive contractual or technical barriers.",
+      "We have access to staff or partners with sufficient technical capability to manage system integrations and vendor onboarding.",
+      "Our technology environment does not include critical legacy systems that would be significant barriers to AI integration in the near term.",
+      "We have a process for evaluating new technology tools that includes assessment of integration capability, data use practices, and vendor stability."
+    ],
+    guidance: [
+      { range: "20–24", label: "Ready",                  text: "Infrastructure supports immediate AI deployment in priority areas." },
+      { range: "13–19", label: "Moderate work required", text: "Plan for integration work as part of implementation budgeting." },
+      { range: "8–12",  label: "Significant gaps",       text: "Targeted integration investment needed before full deployment." },
+      { range: "6–7",   label: "Assessment needed",      text: "Infrastructure assessment and remediation planning should precede technology procurement." }
+    ]
+  },
+  {
+    id: 3, title: "Dimension 3: Staff and leadership readiness", max: 28,
+    subtitle: "Human readiness is consistently the most underestimated implementation dimension.",
+    questions: [
+      "Our CEO or Executive Director has publicly and specifically identified AI as a strategic organizational priority, not simply a technology initiative.",
+      "Senior staff leaders across key functions, including membership, communications, education, and events, understand the basics of what AI can and cannot do in their areas of responsibility.",
+      "Our organization has a track record of successfully adopting new technology tools across the staff team, with reasonable adoption rates and sustained use over time.",
+      "Staff generally approach new technology with curiosity and openness rather than significant resistance or skepticism.",
+      "We have at least one internal staff member with the technical literacy and organizational credibility to lead AI implementation efforts effectively.",
+      "Our board has sufficient AI literacy to ask informed questions, evaluate risk appropriately, and make sound financial decisions about AI investment.",
+      "We have a structured approach to staff professional development that could incorporate AI literacy training without significant additional infrastructure."
+    ],
+    guidance: [
+      { range: "23–28", label: "Strong human foundation", text: "Ready to support meaningful adoption across the organization." },
+      { range: "15–22", label: "Developing readiness",    text: "Invest in literacy and change management alongside technology deployment." },
+      { range: "9–14",  label: "Significant gaps",        text: "Leadership commitment and staff development should precede broad deployment." },
+      { range: "7–8",   label: "First priority",          text: "Human readiness work is the first priority before any significant AI investment." }
+    ]
+  },
+  {
+    id: 4, title: "Dimension 4: Financial readiness", max: 20,
+    subtitle: "Assesses budget clarity and investment discipline for AI implementation over a realistic timeframe.",
+    questions: [
+      "We have identified a specific budget allocation for AI exploration and initial implementation in the current or next fiscal year.",
+      "Our financial planning for AI accounts for the full cost of implementation, including integration work, staff training, change management support, and ongoing vendor relationships, not only software licensing.",
+      "Our board and senior leadership team understand that meaningful AI implementation requires sustained investment over multiple years rather than a one-time expenditure.",
+      "We have a clear methodology for evaluating the return on technology investments and the internal capacity to apply it to AI-related decisions.",
+      "We have identified the specific, measurable outcomes we expect AI to improve and can quantify the financial value of improvement in those outcomes."
+    ],
+    guidance: [
+      { range: "17–20", label: "Strong foundation",  text: "Ready to make informed investment decisions." },
+      { range: "11–16", label: "Developing clarity",  text: "Strengthen financial planning before committing to major expenditures." },
+      { range: "6–10",  label: "Significant gaps",    text: "Develop a multi-year AI investment framework before procurement." },
+      { range: "5",     label: "Planning needed",     text: "Financial planning work is needed before meaningful AI investment decisions can be made responsibly." }
+    ]
+  },
+  {
+    id: 5, title: "Dimension 5: Governance readiness", max: 24,
+    subtitle: "Assesses whether foundational structures are in place to use AI responsibly and in alignment with member trust obligations.",
+    questions: [
+      "Our organization has a current, written policy governing the use of AI tools by staff, including provisions for data use, editorial oversight, and member privacy.",
+      "We have designated a specific individual or group with responsibility for AI oversight, including reviewing new implementations, monitoring performance, and maintaining governance standards.",
+      "Our vendor contracts for AI-powered tools include provisions governing data use, member privacy protections, and data portability.",
+      "We have established protocols identifying which categories of decisions require human review regardless of what AI analysis recommends.",
+      "We have a process for monitoring AI system outputs for differential impact across member demographic segments.",
+      "We have a basic incident response protocol that would guide our organization's response if an AI-related failure affected member data or experience."
+    ],
+    guidance: [
+      { range: "20–24", label: "Strong governance foundation", text: "Ready to deploy AI responsibly at meaningful scale." },
+      { range: "13–19", label: "Developing governance",        text: "Formalize key structures before expanding AI deployment." },
+      { range: "8–12",  label: "Significant gaps",             text: "Governance framework development should precede or accompany technology deployment." },
+      { range: "6–7",   label: "First priority",               text: "Governance foundation not yet in place — this is the first priority before any AI implementation begins." }
+    ]
+  }
+];
+
+const answers = {};
+
+function getScore(dimId) {
+  const dim = dimensions.find(d => d.id === dimId);
+  return dim.questions.reduce((sum, _, qi) => sum + (answers[dimId + '-' + qi] || 0), 0);
+}
+
+function getTotalScore() {
+  return dimensions.reduce((sum, d) => sum + getScore(d.id), 0);
+}
+
+function getGuidanceForDim(dim, score) {
+  for (const g of dim.guidance) {
+    if (g.range.includes('–')) {
+      const parts = g.range.split('–');
+      if (score >= Number(parts[0]) && score <= Number(parts[1])) return g;
+    } else {
+      if (score === Number(g.range)) return g;
+    }
+  }
+  return dim.guidance[dim.guidance.length - 1];
+}
+
+function getOverallInterp(total) {
+  if (total >= 100) return {
+    label: "Strong readiness (100–120)", cls: "interp-strong",
+    text: "Your organization is well-positioned to pursue meaningful AI implementation across multiple areas simultaneously. The foundations are in place to support ambitious deployment. Focus on identifying the highest-value applications, selecting appropriate tools, and maintaining the governance discipline that strong readiness enables. The risk at this level is moving too quickly without adequate change management. Sustained leadership attention and staff support remain essential even when the technical foundation is strong."
+  };
+  if (total >= 75) return {
+    label: "Developing readiness (75–99)", cls: "interp-developing",
+    text: "Your organization has meaningful strengths to build on and identifiable gaps to address. Review your dimension scores to identify which areas are strongest and which represent the most significant barriers. Pursue quick wins in the areas where readiness is highest while running remediation work in parallel on the dimensions with the lowest scores. A phased approach that sequences investments around your areas of strength will produce better results than attempting to advance all dimensions simultaneously."
+  };
+  if (total >= 50) return {
+    label: "Early stage readiness (50–74)", cls: "interp-early",
+    text: "Your organization is in the early stages of building the foundation AI implementation requires. This is not a reason to delay engagement with AI entirely, but it is a clear signal that foundational investments need to come before significant technology expenditure. Identify the one or two dimensions with the lowest scores and treat them as first-phase priorities. Pursue only the most accessible and lowest-complexity AI applications while foundation work is underway. Use this period to build internal AI literacy and board awareness so that when the foundation is stronger, the organization is positioned to move with greater confidence and speed."
+  };
+  return {
+    label: "Foundation building required (below 50)", cls: "interp-foundation",
+    text: "Your organization needs to invest in foundational readiness before meaningful AI implementation can be expected to deliver sustainable value. The gaps identified across multiple dimensions suggest that technology deployment ahead of this work is likely to underperform and may undermine confidence in future AI investment. Use this assessment as the starting point for a structured readiness development plan, addressing data quality, governance, staff literacy, and financial planning as the first priorities. Revisit this assessment in six to twelve months to track progress and identify when the organization is ready to pursue implementation in earnest."
+  };
+}
+
+function renderDimension(dim) {
+  const score = getScore(dim.id);
+  const pct = dim.max > 0 ? Math.round((score / dim.max) * 100) : 0;
+
+  const qHtml = dim.questions.map(function(q, qi) {
+    const key = dim.id + '-' + qi;
+    const sel = answers[key];
+    const btns = [1,2,3,4].map(function(v) {
+      return '<button class="rating-btn' + (sel === v ? ' selected' : '') + '" onclick="selectRating(' + dim.id + ',' + qi + ',' + v + ')" aria-label="Rate ' + v + ' out of 4">' + v + '</button>';
+    }).join('');
+    return '<div class="question"><div class="q-text">' + q + '</div><div class="rating-btns"><span class="rating-label">Rate:</span>' + btns + '</div></div>';
+  }).join('');
+
+  const guidanceRows = dim.guidance.map(function(g) {
+    return '<div class="guidance-row"><strong>' + g.range + ':</strong> ' + g.label + ' — ' + g.text + '</div>';
+  }).join('');
+
+  return '<div class="dimension" id="dim-' + dim.id + '">' +
+    '<div class="dim-header">' +
+      '<div>' +
+        '<div class="dim-title">' + dim.title + '</div>' +
+        '<div class="dim-subtitle">' + dim.subtitle + '</div>' +
+      '</div>' +
+      '<div class="dim-score-box">' +
+        '<div class="dim-score-label">Score</div>' +
+        '<div><span class="dim-score-val">' + score + '</span><span class="dim-score-max"> / ' + dim.max + '</span></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="questions">' + qHtml + '</div>' +
+    '<div class="dim-footer">' +
+      '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="guidance-title">Scoring guidance</div>' +
+      guidanceRows +
+    '</div>' +
+  '</div>';
+}
+
+function renderAll() {
+  document.getElementById('dimensions-container').innerHTML = dimensions.map(renderDimension).join('');
+
+  const rows = dimensions.map(function(dim) {
+    const score = getScore(dim.id);
+    return '<div class="summary-row"><span class="label">' + dim.title + '</span><span class="score">' + score + ' / ' + dim.max + '</span></div>';
+  }).join('');
+  document.getElementById('summary-rows').innerHTML = rows;
+
+  const total = getTotalScore();
+  document.getElementById('total-score').textContent = total + ' / 120';
+
+  const interp = getOverallInterp(total);
+  document.getElementById('overall-interp').innerHTML =
+    '<div><span class="interp-badge ' + interp.cls + '">' + interp.label + '</span></div>' +
+    '<p class="interp-text">' + interp.text + '</p>';
+}
+
+function selectRating(dimId, qi, value) {
+  answers[dimId + '-' + qi] = value;
+  renderAll();
+}
+
+function resetAll() {
+  if (!confirm('Reset all responses? This cannot be undone.')) return;
+  Object.keys(answers).forEach(function(k) { delete answers[k]; });
+  renderAll();
+}
+
+renderAll();
+</script>
+</body>
+</html>

@@ -35,18 +35,18 @@
     .site-header {
       background: var(--bg-white);
       border-bottom: 1px solid var(--border-light);
-      padding: 1.25rem 2rem;
+      padding: 1.5rem 2rem 1.25rem;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
+      text-align: center;
+      gap: 0.75rem;
     }
     .site-header img {
-      height: 64px;
+      height: 72px;
       width: auto;
-      flex-shrink: 0;
     }
-    .header-text { flex: 1; min-width: 220px; }
+    .header-text { }
     .header-text h1 {
       font-size: 22px;
       font-weight: 600;
@@ -191,17 +191,27 @@
     .interp-early     { background: #FAECE7; color: #993C1D; }
     .interp-foundation{ background: #FCEBEB; color: #A32D2D; }
 
-    /* Reset */
-    .reset-btn {
-      display: block; margin: 0 auto 2rem;
+    /* Reset + Print buttons */
+    .reset-btn, .print-btn {
+      display: inline-block; margin: 0 0.5rem 2rem;
       padding: 10px 28px;
       border: 0.5px solid var(--border-medium);
       border-radius: var(--radius-md);
-      background: var(--bg-white);
-      font-size: 14px; color: var(--text-secondary); cursor: pointer;
+      font-size: 14px; cursor: pointer;
       transition: background 0.1s, color 0.1s;
     }
+    .reset-btn {
+      background: var(--bg-white);
+      color: var(--text-secondary);
+    }
     .reset-btn:hover { background: var(--bg-card); color: var(--text-primary); }
+    .print-btn {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .print-btn:hover { background: #0c447c; border-color: #0c447c; }
+    .btn-row { text-align: center; }
 
     /* ── FOOTER ── */
     .site-footer {
@@ -218,12 +228,12 @@
     @media print {
       body { background: white; }
       .site-header { border-bottom: 1px solid #ccc; }
-      .reset-btn { display: none; }
+      .reset-btn, .print-btn { display: none; }
       .dimension, .summary { break-inside: avoid; }
     }
 
     @media (max-width: 540px) {
-      .site-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .site-header { padding: 1.25rem 1rem; }
       .scale-guide { grid-template-columns: 1fr; }
       .dim-header { flex-direction: column; }
       .dim-score-box { text-align: left; }
@@ -265,7 +275,10 @@
     <div class="interpretation" id="overall-interp"></div>
   </div>
 
-  <button class="reset-btn" onclick="resetAll()">Reset all responses</button>
+  <div class="btn-row">
+    <button class="reset-btn" onclick="resetAll()">Reset all responses</button>
+    <button class="print-btn" onclick="window.print()">&#128438; Print results</button>
+  </div>
 
 </main>
 

@@ -104,17 +104,18 @@
       padding: 1rem 1.25rem;
       background: var(--bg-card);
       border-bottom: 0.5px solid var(--border-light);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
     }
     .dim-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
-    .dim-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 3px; line-height: 1.5; max-width: 480px; }
-    .dim-score-box { text-align: right; flex-shrink: 0; }
-    .dim-score-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
-    .dim-score-val { font-size: 22px; font-weight: 600; color: var(--text-primary); }
-    .dim-score-max { font-size: 13px; color: var(--text-secondary); }
+    .dim-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 3px; line-height: 1.5; }
+    .dim-score-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .dim-score-label { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+    .dim-score-val { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+    .dim-score-max { font-size: 14px; color: var(--text-secondary); }
 
     /* Questions */
     .question {
@@ -235,8 +236,7 @@
     @media (max-width: 540px) {
       .site-header { padding: 1.25rem 1rem; }
       .scale-guide { grid-template-columns: 1fr; }
-      .dim-header { flex-direction: column; }
-      .dim-score-box { text-align: left; }
+
     }
   </style>
 </head>
@@ -443,17 +443,16 @@ function renderDimension(dim) {
 
   return '<div class="dimension" id="dim-' + dim.id + '">' +
     '<div class="dim-header">' +
-      '<div>' +
-        '<div class="dim-title">' + dim.title + '</div>' +
-        '<div class="dim-subtitle">' + dim.subtitle + '</div>' +
-      '</div>' +
-      '<div class="dim-score-box">' +
-        '<div class="dim-score-label">Score</div>' +
-        '<div><span class="dim-score-val">' + score + '</span><span class="dim-score-max"> / ' + dim.max + '</span></div>' +
-      '</div>' +
+      '<div class="dim-title">' + dim.title + '</div>' +
+      '<div class="dim-subtitle">' + dim.subtitle + '</div>' +
     '</div>' +
     '<div class="questions">' + qHtml + '</div>' +
     '<div class="dim-footer">' +
+      '<div class="dim-score-row">' +
+        '<span class="dim-score-label">Dimension score:</span>' +
+        '<span class="dim-score-val">' + score + '</span>' +
+        '<span class="dim-score-max">/ ' + dim.max + '</span>' +
+      '</div>' +
       '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
       '<div class="guidance-title">Scoring guidance</div>' +
       guidanceRows +
